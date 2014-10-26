@@ -11,9 +11,11 @@ module.exports = function (app) {
         redisModel.getStatus("failed").done(function(failed){
             redisModel.getJobsInList(failed).done(function(keys){
                 redisModel.formatKeys(keys).done(function(keyList){
-                    redisModel.getStatusCounts().done(function(countObject){
-                        var model = { keys: keyList, counts: countObject, failed: true, type: "Failed"};
-                        dfd.resolve(model);
+                    redisModel.getDataForKeys(keyList).done(function(keyList){
+                        redisModel.getStatusCounts().done(function(countObject){
+                            var model = { keys: keyList, counts: countObject, failed: true, type: "Failed"};
+                            dfd.resolve(model);
+                        });
                     });
                 });
             });

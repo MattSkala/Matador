@@ -11,9 +11,11 @@ module.exports = function (app) {
         redisModel.getStatus("wait").done(function(active){
             redisModel.getJobsInList(active).done(function(keys){
                 redisModel.formatKeys(keys).done(function(keyList){
-                    redisModel.getStatusCounts().done(function(countObject){
-                        var model = { keys: keyList, counts: countObject, pending: true, type: "Pending" };
-                        dfd.resolve(model);
+                    redisModel.getDataForKeys(keyList).done(function(keyList){
+                        redisModel.getStatusCounts().done(function(countObject){
+                            var model = { keys: keyList, counts: countObject, pending: true, type: "Pending" };
+                            dfd.resolve(model);
+                        });
                     });
                 });
             });
